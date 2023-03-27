@@ -21,7 +21,7 @@ export default createGlobalStyle`
         text-decoration: none;
     }
 
-    button, a {
+    button, a, svg {
         cursor: pointer;
         transition: filter 0.2s;
     }

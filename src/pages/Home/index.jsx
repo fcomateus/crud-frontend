@@ -14,24 +14,35 @@ export function Home() {
 
     const mock = [
         {
+            id: 1,
             name:"João da Silva",
             age:"32",
+            dt_nasc:"20/06/1991",
             cep:"999999999",
             street:"Rua das Flores",
             number:"00"
         },
         {
+            id: 2,
             name:"Joaquina Pereira",
             age:"20",
             cep:"111111111",
+            dt_nasc:"15/10/2002",
             street:"Rua das Folhas",
             number:"01"
         },
     ];
 
-    function handleClick() {
-        navigate("/edit");
+    function handleClickButtonEdit(id_person) {
+        console.log(id_person);
+        
+        //navigate("/edit");
     }
+
+    function handleClickButtonCreate() {
+        navigate("/create");
+    }
+    
 
     return(
         <Container>
@@ -48,40 +59,28 @@ export function Home() {
 
                 <Button
                     title="Criar"
+                    onClick={handleClickButtonCreate}
                 />
             </Search>
             
             <Content>
-                <Info>
-                    <section>
-                        <p>Nome: João da Silva</p>
-                        <p>Idade: 32 anos</p>
-                    </section>
-
-                    <section>
-                        <button>
-                            <FiEdit/>
-                        </button>
-                        <p>Endereço:</p>
-                        <p>CEP: 999999-999</p>
-                        <p>Rua: Rua das Flores</p>
-                        <p>Número: {teste}</p>
-                    </section>
-                </Info>
 
                 {
                     mock.map( (person, index) => {
                         return(
                             <Info
-                                key={index}
+                                key={person.id}
                             >
                                 <section>
                                     <p>Nome: {person.name}</p>
                                     <p>Idade: {person.age}</p>
+                                    <p>Data de nascimento: {person.dt_nasc}</p>
                                 </section>
 
                                 <section>
-                                    <button>
+                                    <button
+                                        onClick={() => {handleClickButtonEdit(person.id)}}
+                                    >
                                         <FiEdit/>
                                     </button>
                                     <p>Endereço:</p>

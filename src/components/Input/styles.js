@@ -16,7 +16,9 @@ export const Container = styled.div`
         padding: 0 8px;
         background: none;
         width: 100%;
+    }
 
-        
+    &:has(input:disabled)  {
+        background-color: ${({ theme }) => theme.COLORS.GRAY};
     }
 `

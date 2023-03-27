@@ -4,7 +4,7 @@ export function Input({...rest}) {
     return(
         <Container>
             <input
-                type="text" 
+                 
                 {...rest}
             />
         </Container>

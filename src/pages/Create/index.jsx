@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 
-export function Edit() {
+export function Create() {
 
     const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export function Edit() {
             
             <Container>
                 
-                <h1>Edição de dados</h1> 
+                <h1>Adicionar pessoa</h1> 
 
                 <Form>
 
@@ -118,7 +118,7 @@ export function Edit() {
                     </Section>  
 
                     <Button
-                        title="Salvar"
+                        title="Adicionar na lista"
                         className="submit"
                         onClick={mostraEstados}
                     />
