@@ -23,18 +23,18 @@ export function Edit() {
         console.log(cep);
     }
 
-    function handleBirthDate(e){
-        setDataNascimento(e.target.value);
-        console.log(dt_nasc);
+    // function handleBirthDate(e){
+    //     setDataNascimento(e.target.value);
+    //     console.log(dt_nasc);
 
-        const dt_nascimento = new Date(dt_nasc);
-        const dt_atual = new Date();
-        const diferenca = dt_atual.getTime() - dt_nascimento.getTime();
+    //     const dt_nascimento = new Date(dt_nasc);
+    //     const dt_atual = new Date();
+    //     const diferenca = dt_atual.getTime() - dt_nascimento.getTime();
 
-        const age = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
+    //     const age = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
 
-        setIdade(age);
-    }
+    //     setIdade(age);
+    // }
 
     useEffect(() => {
         //carregar dados do usuário selecionado
@@ -71,7 +71,8 @@ export function Edit() {
                                 type="date"
                                 id="dt_nasc"
                                 value={dt_nasc}
-                                onChange={e => handleBirthDate(e)}
+                                // onChange={e => handleBirthDate(e)}
+                                onChange={e => setDataNascimento(e.target.value)}
                                 />
 
                         </InputWrapper>
@@ -80,7 +81,9 @@ export function Edit() {
                             <Input
                                 id="idade"
                                 value={idade}
-                                disabled
+                                type="number"
+                                min="0"
+                                // disabled
                                 onChange={e => setIdade(e.target.value)}
                                 />
                         </InputWrapper>
