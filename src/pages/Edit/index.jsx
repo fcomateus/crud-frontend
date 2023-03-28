@@ -2,8 +2,9 @@ import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button'
 import { Container, Section, InputWrapper, Form } from './styles'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { api } from '../../services/api';
 
 
 export function Edit() {
@@ -12,15 +13,37 @@ export function Edit() {
 
     const [nome, setNome] = useState("");
     const [dt_nasc, setDataNascimento] = useState("");
-    const [idade, setIdade] = useState(0);
+    const [idade, setIdade] = useState("");
     const [cep, setCEP] = useState("");
     const [rua, setRua] = useState("");
     const [numero, setNumero] = useState("");
+    const [bairro, setBairro] = useState("");
 
+    const params = useParams();
 
-    function mostraEstados(){
-        console.log(nome);
-        console.log(cep);
+    async function handleSave(){
+        if([nome, dt_nasc, idade, cep, rua, numero, bairro].includes("")) {
+            return alert("Há campos não preenchidos!");
+        } 
+
+        const dados = {
+            nome,
+            dt_nasc,
+            idade,
+            cep,
+            rua,
+            numero,
+            bairro
+        }
+
+        try {
+            api.put(`/pessoas/${params.id}`, dados);
+            alert("Dados salvos!")
+        } catch (error) {
+            alert("Não foi possível salvar edição");
+        }
+
+        navigate(-1);
     }
 
     // function handleBirthDate(e){
@@ -38,7 +61,27 @@ export function Edit() {
 
     useEffect(() => {
         //carregar dados do usuário selecionado
+        async function fetchPessoas() {
+            try {
+                const response = await api.get(`/pessoas/${params.id}`);
+                setNome(response.data.nome);
+                setIdade(response.data.idade);
 
+                
+                setDataNascimento(new Date(response.data.dt_nasc).toISOString());
+
+                console.log(new Date(response.data.dt_nasc).toISOString());
+
+                setCEP(response.data.cep);
+                setRua(response.data.rua);
+                setNumero(response.data.numero);
+                setBairro(response.data.bairro);
+            } catch(error) {
+                alert("Não foi possível trazer os dados do usuário");
+            }
+
+        }
+        fetchPessoas();
 
     }, [])
 
@@ -118,12 +161,21 @@ export function Edit() {
                                 onChange={e => setNumero(e.target.value)}
                                 />
                         </InputWrapper>
+                        <InputWrapper>
+                            <label htmlFor="bairro">Bairro</label>
+                            <Input
+                                id="bairro"
+                                value={bairro}
+                                onChange={e => setBairro(e.target.value)}
+                                />
+                        </InputWrapper>
+                        
                     </Section>  
 
                     <Button
                         title="Salvar"
                         className="submit"
-                        onClick={mostraEstados}
+                        onClick={handleSave}
                     />
 
                 </Form>

@@ -1,62 +1,83 @@
 import{ useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 import { Container, Search, Content } from './styles';
 import { FiEdit } from 'react-icons/fi'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Info } from '../../components/Info';
 
+import { api } from '../../services/api';
+
 export function Home() {
+    const [pessoas, setPessoas] = useState([]);
+    const [nome, setNome] = useState("");
+
     const navigate = useNavigate();
-   
-    const teste = "Texto";
 
     const mock = [
         {
             id: 1,
-            name:"João da Silva",
-            age:"32",
+            nome:"João da Silva",
+            idade:"32",
             dt_nasc:"20/06/1991",
             cep:"999999999",
-            street:"Rua das Flores",
-            number:"00"
+            rua:"Rua das Flores",
+            numeror:"00",
+            bairro:"Edson Queiroz"
         },
-        {
-            id: 2,
-            name:"Joaquina Pereira",
-            age:"20",
-            cep:"111111111",
-            dt_nasc:"15/10/2002",
-            street:"Rua das Folhas",
-            number:"01"
-        },
+        // {
+        //     id: 2,
+        //     nome:"Joaquina Pereira",
+        //     idade:"20",
+        //     dt_nasc:"15/10/2002",
+        //     cep:"111111111",
+        //     rua:"Rua das Folhas",
+        //     numero:"01",
+        //     bairro:"Jardim das Oliveiras"
+        // },
     ];
 
-    function handleClickButtonEdit(id_person) {
-        console.log(id_person);
-        
-        //navigate("/edit");
+    function handleClickButtonEdit(id_pessoa) {
+        navigate(`/edit/${id_pessoa}`);
     }
 
     function handleClickButtonCreate() {
         navigate("/create");
     }
+
+    async function fetchPessoas() {
+        const response = await api.get(`/pessoas?nome=${nome}`)
+        setPessoas(response.data)
+        console.log(response.data);
+    }
     
+    async function handleClickButtonDelete(id_pessoa) {
+        const confirm = window.confirm("Quer deletar esse registro?");
+
+        if(confirm){
+            await api.delete(`/pessoas/${id_pessoa}`)
+            setNome("");
+
+            fetchPessoas();
+        }
+    }
+
+    useEffect(() => {
+        fetchPessoas();
+    }, [nome]);
 
     return(
         <Container>
             <h1>InfoMarket - CRUD</h1>
-
             <Search>        
                 <Input
                     placeholder="Pesquise por nome"
+                    onChange={e => setNome(e.target.value)}
                 ></Input>
-
-                <Button
-                    title="Pesquisar"
-                />
-
+                
                 <Button
                     title="Criar"
                     onClick={handleClickButtonCreate}
@@ -66,27 +87,35 @@ export function Home() {
             <Content>
 
                 {
-                    mock.map( (person, index) => {
+                    //mock.map
+                    pessoas.map( (pessoa, index) => {
                         return(
                             <Info
-                                key={person.id}
+                                key={pessoa.id}
                             >
                                 <section>
-                                    <p>Nome: {person.name}</p>
-                                    <p>Idade: {person.age}</p>
-                                    <p>Data de nascimento: {person.dt_nasc}</p>
+                                    <p>Nome: {pessoa.nome}</p>
+                                    <p>Idade: {pessoa.idade}</p>
+                                    <p>Data de nascimento: {pessoa.dt_nasc}</p>
                                 </section>
 
                                 <section>
                                     <button
-                                        onClick={() => {handleClickButtonEdit(person.id)}}
+                                        onClick={() => {handleClickButtonEdit(pessoa.id)}}
                                     >
                                         <FiEdit/>
                                     </button>
                                     <p>Endereço:</p>
-                                    <p>CEP:{person.cep}</p>
-                                    <p>Rua: {person.street}</p>
-                                    <p>Número: {person.number}</p>
+                                    <p>CEP:{pessoa.cep}</p>
+                                    <p>Rua: {pessoa.rua}</p>
+                                    <p>Número: {pessoa.numero}</p>
+                                    <p>Bairro: {pessoa.bairro}</p>
+
+                                    <button
+                                        onClick={() => {handleClickButtonDelete(pessoa.id)}}
+                                    >
+                                        <RiDeleteBin6Line/>
+                                    </button>
 
                                 </section>
                             </Info>

@@ -4,7 +4,7 @@ import { Button } from '../../components/Button'
 import { Container, Section, InputWrapper, Form } from './styles'
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
+import { api } from '../../services/api';
 
 export function Create() {
 
@@ -12,15 +12,30 @@ export function Create() {
 
     const [nome, setNome] = useState("");
     const [dt_nasc, setDataNascimento] = useState("");
-    const [idade, setIdade] = useState(0);
+    const [idade, setIdade] = useState("");
     const [cep, setCEP] = useState("");
     const [rua, setRua] = useState("");
     const [numero, setNumero] = useState("");
+    const [bairro, setBairro] = useState("");
 
+    async function handleCreate() {
+        if([nome, dt_nasc, idade, cep, rua, numero, bairro].includes("")) {
+            return alert("Há campos não preenchidos!");
+        } 
 
-    function mostraEstados(){
-        console.log(nome);
-        console.log(cep);
+        const dados = {
+            nome,
+            dt_nasc,
+            idade,
+            cep,
+            rua,
+            numero,
+            bairro
+        }
+
+        api.post("pessoas", dados);
+
+        navigate("/");
     }
 
     // function handleBirthDate(e){
@@ -36,11 +51,6 @@ export function Create() {
     //     setIdade(age);
     // }
 
-    useEffect(() => {
-        //carregar dados do usuário selecionado
-
-
-    }, [])
 
     return (
         <>
@@ -98,6 +108,7 @@ export function Create() {
                             <Input
                                 id="cep"
                                 value={cep}
+                                maxLength="8"
                                 onChange={e => setCEP(e.target.value)}
                                 />
                         </InputWrapper>
@@ -115,7 +126,16 @@ export function Create() {
                             <Input
                                 id="numero"
                                 value={numero}
+                                maxLength="6"
                                 onChange={e => setNumero(e.target.value)}
+                                />
+                        </InputWrapper>
+                        <InputWrapper>
+                            <label htmlFor="bairro">Bairro</label>
+                            <Input
+                                id="bairro"
+                                value={bairro}
+                                onChange={e => setBairro(e.target.value)}
                                 />
                         </InputWrapper>
                     </Section>  
@@ -123,7 +143,7 @@ export function Create() {
                     <Button
                         title="Adicionar na lista"
                         className="submit"
-                        onClick={mostraEstados}
+                        onClick={handleCreate}
                     />
 
                 </Form>
