@@ -35,22 +35,25 @@ export function Create() {
 
         api.post("pessoas", dados);
 
+        alert("Registro inserido!");
         navigate("/");
     }
 
-    // function handleBirthDate(e){
-    //     setDataNascimento(e.target.value);
-    //     console.log(dt_nasc);
+    function handleChangeBirthDate(e){
+        //console.log(e.target.value);
 
-    //     const dt_nascimento = new Date(dt_nasc);
-    //     const dt_atual = new Date();
-    //     const diferenca = dt_atual.getTime() - dt_nascimento.getTime();
+        setDataNascimento(e.target.value);
 
-    //     const age = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
+        //console.log("estado data nascimento",dt_nasc);
 
-    //     setIdade(age);
-    // }
+        const dtNascimentoInput = new Date(e.target.value);
+        const dtAtual = new Date();
+        const diferenca = dtAtual.getTime() - dtNascimentoInput.getTime();
 
+        const idadeCalculada = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
+        //console.log("idade",age);
+        setIdade(idadeCalculada);
+    }
 
     return (
         <>
@@ -81,8 +84,8 @@ export function Create() {
                                 type="date"
                                 id="dt_nasc"
                                 value={dt_nasc}
-                                // onChange={e => handleBirthDate(e)}
-                                onChange={e => setDataNascimento(e.target.value)}
+                                onChange={e => handleChangeBirthDate(e)}
+                                //onChange={e => setDataNascimento(e.target.value)}
                                 />
 
                         </InputWrapper>
@@ -93,8 +96,8 @@ export function Create() {
                                 value={idade}
                                 type="number"
                                 min="0"
-                                // disabled
-                                onChange={e => setIdade(e.target.value)}
+                                disabled
+                                //onChange={e => setIdade(e.target.value)}
                                 />
                         </InputWrapper>
                     </Section> 

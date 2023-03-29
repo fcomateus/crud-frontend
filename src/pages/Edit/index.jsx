@@ -46,18 +46,21 @@ export function Edit() {
         navigate(-1);
     }
 
-    // function handleBirthDate(e){
-    //     setDataNascimento(e.target.value);
-    //     console.log(dt_nasc);
+    function handleChangeBirthDate(e){
+        //console.log(e.target.value);
 
-    //     const dt_nascimento = new Date(dt_nasc);
-    //     const dt_atual = new Date();
-    //     const diferenca = dt_atual.getTime() - dt_nascimento.getTime();
+        setDataNascimento(e.target.value);
 
-    //     const age = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
+        //console.log("estado data nascimento",dt_nasc);
 
-    //     setIdade(age);
-    // }
+        const dtNascimentoInput = new Date(e.target.value);
+        const dtAtual = new Date();
+        const diferenca = dtAtual.getTime() - dtNascimentoInput.getTime();
+
+        const idadeCalculada = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
+        //console.log("idade",age);
+        setIdade(idadeCalculada);
+    }
 
     useEffect(() => {
         //carregar dados do usuário selecionado
@@ -67,10 +70,24 @@ export function Edit() {
                 setNome(response.data.nome);
                 setIdade(response.data.idade);
 
-                
-                setDataNascimento(new Date(response.data.dt_nasc).toISOString());
+                //tratando data vinda do banco de dados
+                console.log(response.data.dt_nasc, "data vinda do bd");
+                let data = response.data.dt_nasc;
+                console.log("objeto data", data);
+                data = new Date(data);
+                //console.log(data);
 
-                console.log(new Date(response.data.dt_nasc).toISOString());
+                const ano = data.getFullYear();
+                const mes = data.getMonth()+1;
+                const dia = data.getDate();
+
+                const mesFormatado = mes < 10 ? `0${mes}`: mes;
+                const diaFormatado = dia < 10 ? `0${dia}`: dia;
+
+                const dataTratada = `${ano}-${mesFormatado}-${diaFormatado}`;
+                //console.log(dataTratada);
+                setDataNascimento(dataTratada)
+
 
                 setCEP(response.data.cep);
                 setRua(response.data.rua);
@@ -114,8 +131,8 @@ export function Edit() {
                                 type="date"
                                 id="dt_nasc"
                                 value={dt_nasc}
-                                // onChange={e => handleBirthDate(e)}
-                                onChange={e => setDataNascimento(e.target.value)}
+                                onChange={e => handleChangeBirthDate(e)}
+                                //onChange={e => setDataNascimento(e.target.value)}
                                 />
 
                         </InputWrapper>
@@ -126,8 +143,8 @@ export function Edit() {
                                 value={idade}
                                 type="number"
                                 min="0"
-                                // disabled
-                                onChange={e => setIdade(e.target.value)}
+                                disabled
+                                //onChange={e => setIdade(e.target.value)}
                                 />
                         </InputWrapper>
                     </Section> 
