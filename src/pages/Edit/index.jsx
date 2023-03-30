@@ -47,20 +47,17 @@ export function Edit() {
     }
 
     function handleChangeBirthDate(e){
-        //console.log(e.target.value);
-
         setDataNascimento(e.target.value);
-
-        //console.log("estado data nascimento",dt_nasc);
 
         const dtNascimentoInput = new Date(e.target.value);
         const dtAtual = new Date();
         const diferenca = dtAtual.getTime() - dtNascimentoInput.getTime();
 
         const idadeCalculada = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
-        //console.log("idade",age);
         setIdade(idadeCalculada);
     }
+
+    const [dataAtual, setDataAtual] = useState("");
 
     useEffect(() => {
         //carregar dados do usuário selecionado
@@ -71,11 +68,8 @@ export function Edit() {
                 setIdade(response.data.idade);
 
                 //tratando data vinda do banco de dados
-                console.log(response.data.dt_nasc, "data vinda do bd");
                 let data = response.data.dt_nasc;
-                console.log("objeto data", data);
                 data = new Date(data);
-                //console.log(data);
 
                 const ano = data.getFullYear();
                 const mes = data.getMonth()+1;
@@ -85,7 +79,6 @@ export function Edit() {
                 const diaFormatado = dia < 10 ? `0${dia}`: dia;
 
                 const dataTratada = `${ano}-${mesFormatado}-${diaFormatado}`;
-                //console.log(dataTratada);
                 setDataNascimento(dataTratada)
 
 
@@ -99,6 +92,21 @@ export function Edit() {
 
         }
         fetchPessoas();
+
+        //colocando limite máximo de seleção de data
+        const data = new Date();
+
+        const ano = data.getFullYear();
+        const mes = data.getMonth()+1;
+        const dia = data.getDate();
+
+                        
+        const mesFormatado = mes < 10 ? `0${mes}`: mes;
+        const diaFormatado = dia < 10 ? `0${dia}`: dia;
+
+        const dataTratada = `${ano}-${mesFormatado}-${diaFormatado}`
+
+        setDataAtual(dataTratada);
 
     }, [])
 
@@ -131,8 +139,9 @@ export function Edit() {
                                 type="date"
                                 id="dt_nasc"
                                 value={dt_nasc}
+                                min="1900-01-01"
+                                max={dataAtual}
                                 onChange={e => handleChangeBirthDate(e)}
-                                //onChange={e => setDataNascimento(e.target.value)}
                                 />
 
                         </InputWrapper>
@@ -144,7 +153,6 @@ export function Edit() {
                                 type="number"
                                 min="0"
                                 disabled
-                                //onChange={e => setIdade(e.target.value)}
                                 />
                         </InputWrapper>
                     </Section> 
@@ -158,6 +166,7 @@ export function Edit() {
                             <Input
                                 id="cep"
                                 value={cep}
+                                maxLength="8"
                                 onChange={e => setCEP(e.target.value)}
                                 />
                         </InputWrapper>
@@ -175,6 +184,7 @@ export function Edit() {
                             <Input
                                 id="numero"
                                 value={numero}
+                                maxLength="6"
                                 onChange={e => setNumero(e.target.value)}
                                 />
                         </InputWrapper>

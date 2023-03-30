@@ -3,7 +3,7 @@ import { Input } from '../../components/Input';
 import { Button } from '../../components/Button'
 import { Container, Section, InputWrapper, Form } from './styles'
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../services/api';
 
 export function Create() {
@@ -17,6 +17,8 @@ export function Create() {
     const [rua, setRua] = useState("");
     const [numero, setNumero] = useState("");
     const [bairro, setBairro] = useState("");
+
+    const [dataAtual, setDataAtual] = useState("");
 
     async function handleCreate() {
         if([nome, dt_nasc, idade, cep, rua, numero, bairro].includes("")) {
@@ -36,24 +38,37 @@ export function Create() {
         api.post("pessoas", dados);
 
         alert("Registro inserido!");
-        navigate("/");
+        navigate(-1);
     }
 
     function handleChangeBirthDate(e){
-        //console.log(e.target.value);
-
         setDataNascimento(e.target.value);
-
-        //console.log("estado data nascimento",dt_nasc);
 
         const dtNascimentoInput = new Date(e.target.value);
         const dtAtual = new Date();
+
         const diferenca = dtAtual.getTime() - dtNascimentoInput.getTime();
 
         const idadeCalculada = Math.floor(diferenca/(1000 * 60 * 60 * 24 * 365.25));
-        //console.log("idade",age);
         setIdade(idadeCalculada);
     }
+
+    useEffect(() => {
+        //colocando limite máximo de seleção de data
+        const data = new Date();
+
+        const ano = data.getFullYear();
+        const mes = data.getMonth()+1;
+        const dia = data.getDate();
+
+                        
+        const mesFormatado = mes < 10 ? `0${mes}`: mes;
+        const diaFormatado = dia < 10 ? `0${dia}`: dia;
+
+        const dataTratada = `${ano}-${mesFormatado}-${diaFormatado}`
+
+        setDataAtual(dataTratada);
+    }, []);
 
     return (
         <>
@@ -84,8 +99,9 @@ export function Create() {
                                 type="date"
                                 id="dt_nasc"
                                 value={dt_nasc}
+                                min="1900-01-01"
+                                max={dataAtual}
                                 onChange={e => handleChangeBirthDate(e)}
-                                //onChange={e => setDataNascimento(e.target.value)}
                                 />
 
                         </InputWrapper>
@@ -97,7 +113,6 @@ export function Create() {
                                 type="number"
                                 min="0"
                                 disabled
-                                //onChange={e => setIdade(e.target.value)}
                                 />
                         </InputWrapper>
                     </Section> 

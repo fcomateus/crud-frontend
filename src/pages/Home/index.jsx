@@ -17,29 +17,6 @@ export function Home() {
 
     const navigate = useNavigate();
 
-    // const mock = [
-    //     {
-    //         id: 1,
-    //         nome:"João da Silva",
-    //         idade:"32",
-    //         dt_nasc:"20/06/1991",
-    //         cep:"999999999",
-    //         rua:"Rua das Flores",
-    //         numeror:"00",
-    //         bairro:"Edson Queiroz"
-    //     },
-    //     {
-    //         id: 2,
-    //         nome:"Joaquina Pereira",
-    //         idade:"20",
-    //         dt_nasc:"15/10/2002",
-    //         cep:"111111111",
-    //         rua:"Rua das Folhas",
-    //         numero:"01",
-    //         bairro:"Jardim das Oliveiras"
-    //     },
-    // ];
-
     function handleClickButtonEdit(id_pessoa) {
         navigate(`/edit/${id_pessoa}`);
     }
@@ -51,8 +28,6 @@ export function Home() {
     async function fetchPessoas() {
         const response = await api.get(`/pessoas?nome=${nome}`)
         setPessoas(response.data)
-        //console.log(response.data);
-        //console.log(response.data[0].dt_nasc);
 
     }
     
@@ -69,6 +44,8 @@ export function Home() {
 
     useEffect(() => {
         fetchPessoas();
+
+        
     }, [nome]);
 
     return(
@@ -91,8 +68,8 @@ export function Home() {
                 {
                     //mock.map
                     pessoas.map( (pessoa, index) => {
+                        //tratando data
                         let data = pessoa.dt_nasc;
-                        console.log(pessoa.dt_nasc);
                         data = new Date(data);
 
                         const ano = data.getFullYear();
@@ -103,9 +80,7 @@ export function Home() {
                         const mesFormatado = mes < 10 ? `0${mes}`: mes;
                         const diaFormatado = dia < 10 ? `0${dia}`: dia;
 
-                        const dataTratada = String(diaFormatado + "-" + mesFormatado + "-" + ano);
-                        //console.log(dataTratada);
-                        //pessoa.dt_nasc = dataTratada;
+                        const dataTratada = `${diaFormatado}/${mesFormatado}/${ano}`
 
                         return(
                             <Info
@@ -114,7 +89,7 @@ export function Home() {
                                 <section>
                                     <p>Nome: {pessoa.nome}</p>
                                     <p>Idade: {pessoa.idade}</p>
-                                    <p>Data de nascimento: {pessoa.dt_nasc}</p>
+                                    <p>Data de nascimento: {dataTratada}</p>
                                 </section>
 
                                 <section>
@@ -142,7 +117,6 @@ export function Home() {
                 }
             </Content>
 
-            {/* <button onClick={handleClick}>Ir para edição</button> */}
         </Container>
     )   
 }
